@@ -6,7 +6,6 @@ import { BsThermometerHalf, BsCloudy } from 'react-icons/bs'
 import { RiWindyFill } from 'react-icons/ri'
 import { SiRainmeter } from 'react-icons/si'
 import { BsSpeedometer2, BsQuestionLg } from 'react-icons/bs'
-
 import { setNewLocation } from '../Utility';
 import { GetGeoDataCoords } from '../Api';
 
@@ -19,7 +18,8 @@ const Map = ({searchLocation, setWeatherLocation}) => {
 
     // Load adn create the weather overlay from openweathermap
     // sometimes window.google.maps is undefined
-    const weatherOverlay = window.google && new window.google.maps.ImageMapType({
+    const weatherOverlay = () => {
+		return window.google && new window.google.maps.ImageMapType({
         getTileUrl: function (coord, zoom) {
           return (
             'https://tile.openweathermap.org/map/'
@@ -33,13 +33,14 @@ const Map = ({searchLocation, setWeatherLocation}) => {
         maxZoom: 9,
         minZoom: 0,
         name: "Weather"
-    });
+    	});
+	}
 
     useEffect(() => {
 		// Swap overlay types
 		if (map) {
 			map.overlayMapTypes.pop()
-			map.overlayMapTypes.insertAt(0, weatherOverlay)  
+			map.overlayMapTypes.insertAt(0, weatherOverlay())  
 		}
     } , [weatherMapType])
 
@@ -52,7 +53,7 @@ const Map = ({searchLocation, setWeatherLocation}) => {
 
     const onLoad = React.useCallback(function callback(map) {
 		map.overlayMapTypes.pop()
-		map.overlayMapTypes.insertAt(0, weatherOverlay)  
+		map.overlayMapTypes.insertAt(0, weatherOverlay())  
 		setMap(map)
 		// Maintain map position when changing weather overlay
 		setMapCoords(map.getCenter())
