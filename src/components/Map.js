@@ -80,7 +80,7 @@ const Map = ({searchLocation, setWeatherLocation}) => {
 		}
 	}, [geoData])
 
-  return (
+  return window.google.maps && (
     <WeatherMap>
 				<GoogleMap
 				options={{
